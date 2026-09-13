@@ -1,0 +1,56 @@
+body {
+    background-color: #f5f6fa;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Summary Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card h5 {
+    color: #555;
+}
+
+.card h3 {
+    font-weight: bold;
+}
+
+/* Add Expense */
+form {
+    margin-top: 20px;
+}
+
+/* Expense Table */
+.table {
+    vertical-align: middle;
+}
+
+.table th,
+.table td {
+    text-align: center;
+}
+
+/* Delete Button */
+.delete-btn {
+    padding: 5px 12px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+
+    .table {
+        font-size: 14px;
+    }
+
+    #categoryFilter {
+        width: 100% !important;
+        margin-top: 10px;
+    }
+}
