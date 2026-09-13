@@ -7,14 +7,18 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+    res.send("Personal Expense Tracker API is running");
+});
+
 app.get("/expenses", (req, res) => {
-  try {
-    res.json(expenses);
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to get expenses"
-    });
-  }
+    try {
+        res.json(expenses);
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to get expenses"
+        });
+    }
 });
 app.get("/expenses/summary", (req, res) => {
   try {
