@@ -28,5 +28,4 @@ let expenses = [
     date: "2026-08-18"
   }
 ];
-
 module.exports = expenses;

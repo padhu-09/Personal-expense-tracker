@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/expenses";
+const API_URL = "https://personal-expense-tracker-lpm9.onrender.com/expenses";
 
 const expenseForm = document.getElementById("expenseForm");
 const expenseList = document.getElementById("expenseList");
