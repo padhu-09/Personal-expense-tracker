@@ -16,6 +16,28 @@ app.get("/expenses", (req, res) => {
     });
   }
 });
+app.get("/expenses/summary", (req, res) => {
+  try {
+    let total = 0;
+    let categoryTotals = {};
+    expenses.forEach((expense) => {
+      total += expense.amount;
+      if (!categoryTotals[expense.category]) {
+        categoryTotals[expense.category] = 0;
+      }
+      categoryTotals[expense.category] += expense.amount;
+    });
+    res.json({
+      totalSpent: total,
+      numberOfExpenses: expenses.length,
+      categoryBreakdown: categoryTotals
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to get summary"
+    });
+  }
+});
 app.get("/expenses/:id", (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -35,7 +57,6 @@ app.get("/expenses/:id", (req, res) => {
 app.post("/expenses", (req, res) => {
   try {
     const { title, amount, category, date } = req.body;
-
     if (!title || !amount || !category || !date) {
       return res.status(400).json({
         message: "All fields are required"
@@ -46,8 +67,12 @@ app.post("/expenses", (req, res) => {
         message: "Amount must be a positive number"
       });
     }
+    const newId =
+      expenses.length > 0
+        ? Math.max(...expenses.map((expense) => expense.id)) + 1
+        : 1;
     const newExpense = {
-      id: expenses.length + 1,
+      id: newId,
       title: title,
       amount: Number(amount),
       category: category,
@@ -58,7 +83,6 @@ app.post("/expenses", (req, res) => {
       message: "Expense added successfully",
       expense: newExpense
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Failed to add expense"
@@ -68,16 +92,13 @@ app.post("/expenses", (req, res) => {
 app.put("/expenses/:id", (req, res) => {
   try {
     const id = Number(req.params.id);
-
     const expense = expenses.find((item) => item.id === id);
-
     if (!expense) {
       return res.status(404).json({
         message: "Expense not found"
       });
     }
     const { title, amount, category, date } = req.body;
-
     if (!title || !amount || !category || !date) {
       return res.status(400).json({
         message: "All fields are required"
@@ -96,7 +117,6 @@ app.put("/expenses/:id", (req, res) => {
       message: "Expense updated successfully",
       expense: expense
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Failed to update expense"
@@ -117,46 +137,16 @@ app.delete("/expenses/:id", (req, res) => {
       message: "Expense deleted successfully",
       expense: deletedExpense[0]
     });
-
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to delete expense"
-    });
-  }
-});
-app.get("/expenses/summary", (req, res) => {
-  try {
-    let total = 0;
-    let categoryTotals = {};
-
-    expenses.forEach((expense) => {
-      total += expense.amount;
-
-      if (!categoryTotals[expense.category]) {
-        categoryTotals[expense.category] = 0;
-      }
-
-      categoryTotals[expense.category] += expense.amount;
-    });
-    res.json({
-      totalSpent: total,
-      numberOfExpenses: expenses.length,
-      categoryBreakdown: categoryTotals
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to get summary"
-    });
+    res.status(500).json({message: "Failed to delete expense"});
   }
 });
 app.use((err, req, res, next) => {
   console.error(err);
-
   res.status(500).json({
     message: "Something went wrong"
   });
 });
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
